@@ -16,6 +16,10 @@ int main () {
     assert(testfile.getIcon() == nullptr);
     std::cout << testfile << std::endl;
 
+    File testing ("","123");
+    assert(testing.getName() == "NewFile.txt"); 
+    std::cout << testing << std::endl;
+
     std::cout << "========< NON-EMPTY CONSTRUCTOR TEST >========" << std::endl;
     //parameter constructor test
 
@@ -103,7 +107,7 @@ int main () {
     File b ("b");
     File c ("c");
     File d ("d");
-    File e ("e");
+    File e ("e", "123456");
     File f ("f");
     myFolder.addFile(a);
     myFolder.addFile(b);
@@ -148,7 +152,10 @@ int main () {
     std::cout << myFolder.copyFileTo("fakefile", otherFolder) << std::endl; //copy invalid file to other
     std::cout << myFolder.copyFileTo("Q.txt", myFolder) << std::endl; //copy to same folder, should fail
     std::cout << otherFolder.copyFileTo("e.txt", myFolder) << std::endl; //copy existing file into other
-    
+    myFolder.display();
+    otherFolder.display();
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << myFolder.removeFile("e.txt") << std::endl; //e.txt still valid in otherFolder, deep copied
     myFolder.display();
     otherFolder.display();
 }

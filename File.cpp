@@ -44,30 +44,35 @@ bool File::operator<(const File& rhs) const {
 // =========================== YOUR CODE HERE ===========================
 
 File::File(const std::string& filename, const std::string& content, int* icon) {
-   // Validating filename
-   bool extension_exist {false};
-   
-   for (const auto& letters : filename) {
-      if (!isalnum(letters) && extension_exist == false) {
-         // check if non alnum char is period char (allow first period char found)
-         if (letters == '.') {
-            extension_exist = true;
-         } else {
+   // if not empty, validate file name
+   if (filename.length() > 0) {
+      bool extension_exist = false;
+      
+      for (const auto& letters : filename) {
+         if (!isalnum(letters) && extension_exist == false) {
+            // check if non alnum char is period char (allow first period char found)
+            if (letters == '.') {
+               extension_exist = true;
+            } else {
+               throw (InvalidFormatException("Invalid character in filename: " + filename));
+            }
+         } else if (!isalnum(letters) && extension_exist == true) {
+            // if non alnum and ext exists then immediate error (prevents duplicate periods & non-alnum chars)
             throw (InvalidFormatException("Invalid character in filename: " + filename));
          }
-      } else if (!isalnum(letters) && extension_exist == true) {
-         // if non alnum and ext exists then immediate error (prevents duplicate periods & non-alnum chars)
-         throw (InvalidFormatException("Invalid character in filename: " + filename));
+      } 
+      
+      // Setting data members
+      if (extension_exist == false) {
+         filename_ = filename + ".txt";
+      } else {
+         filename_ = filename;
       }
-   } 
-   
-   // Setting data members
-   if (extension_exist == false) {
-      filename_ = filename + ".txt";
    } else {
-      filename_ = filename;
+      //if empty then default
+      filename_ = "NewFile.txt";
    }
-   
+
    contents_ = content;
    icon_ = icon;
 } // Constructor

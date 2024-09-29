@@ -131,7 +131,7 @@ bool Folder::removeFile(const std::string& name) {
    std::vector<File>::iterator mid;
 
    //binary search for file name
-   while(i <= j) {
+   while (i <= j) {
       mid = i + std::distance(i, j) / 2;
 
       if (mid->getName() == name) {
@@ -161,7 +161,7 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
       auto j2 = destination.files_.end() - 1;
       std::vector<File>::iterator mid2;
 
-      while(i2 <= j2) {
+      while (i2 <= j2) {
          mid2 = i2 + std::distance(i2, j2) / 2;
 
          if (mid2->getName() == name) {
@@ -183,7 +183,7 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
       auto j = files_.end() - 1;
       std::vector<File>::iterator mid;
 
-      while(i <= j) {
+      while (i <= j) {
          mid = i + std::distance(i, j) / 2;
 
          if (mid->getName() == name) {
@@ -211,7 +211,7 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
       auto j2 = destination.files_.end() - 1;
       std::vector<File>::iterator mid2;
 
-      while(i2 <= j2) {
+      while (i2 <= j2) {
          mid2 = i2 + std::distance(i2, j2) / 2;
 
          if (mid2->getName() == name) {
@@ -232,7 +232,7 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
       auto j = files_.end() - 1;
       std::vector<File>::iterator mid;
 
-      while(i <= j) {
+      while (i <= j) {
          mid = i + std::distance(i, j) / 2;
 
          if (mid->getName() == name) {
