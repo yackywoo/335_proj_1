@@ -71,3 +71,134 @@ void Folder::display() {
 //             (unless you want your work to be tested incorrectly)
 //    That also means includes. Remember, all other includes go in .hpp
 // =========================== YOUR CODE HERE ===========================
+
+size_t Folder::getSize() const {
+   size_t result {0};
+
+   for (const auto& files : files_) {
+      result += files.getSize();
+   }
+
+   return result;
+} // getSize
+
+bool Folder::addFile(File& new_file) {
+   //no valid filename (already moved)
+   if (new_file.getName() == "") {
+      return false;
+   }
+   
+   //if empty folder, skip the binary search
+   if (files_.empty()) {
+      files_.push_back(std::move(new_file));
+      return true;
+   }
+
+   //no duplicates allowed -> sort then binary sesarch
+   std::sort(files_.begin(), files_.end());
+
+   auto i = files_.begin();
+   auto j = files_.end() - 1;
+   std::vector<File>::iterator mid;
+
+   while (i <= j) {
+      mid = i + std::distance(i, j) / 2;
+
+      if (mid->getName() == new_file.getName()) {
+         //prevents duplicates
+         return false; 
+      } else if (new_file < *mid) {
+         //if on left side
+         j = mid - 1;
+      } else { //new_file > files_[mid]
+         //on right side
+         i = mid + 1;
+      }
+      //if this line of code was at bottom of loop then mid can be used to insert
+      //mid = i + std::distance(i, j) / 2;
+   }
+
+   //if goes past while loop -> (i > j) & not duplicate, so insert
+   // cant use mid to insert because mid won't be updated after breaking out while loop
+   files_.insert(i, std::move(new_file));
+
+   return true;
+} // addFile
+
+bool Folder::removeFile(const std::string& name) {
+   auto i = files_.begin();
+   auto j = files_.end() - 1;
+   std::vector<File>::iterator mid;
+
+   //binary search for file name
+   while(i <= j) {
+      mid = i + std::distance(i, j) / 2;
+
+      if (mid->getName() == name) {
+         files_.erase(mid);
+         return true;
+      } else if (name < mid->getName()) {
+         //if on left side
+         j = mid - 1;
+      } else { //name > mid->getName()
+         //on right side
+         i = mid + 1;
+      }
+   }
+
+   return false;
+} // removeFile
+
+bool Folder::moveFileTo(const std::string& name, Folder& destination) {
+   // if moving to same folder
+   if (this->name_ == destination.getName()) {
+      return true;
+   }
+
+   if (!destination.files_.empty()) {
+      //binary search destination folder for same name
+      auto i2 = destination.files_.begin();
+      auto j2 = destination.files_.end() - 1;
+      std::vector<File>::iterator mid2;
+
+      while(i2 <= j2) {
+         mid2 = i2 + std::distance(i2, j2) / 2;
+
+         if (mid2->getName() == name) {
+            //return false cannot move if dupe name
+            return false;
+         } else if (name < mid2->getName()) {
+            //if on left side
+            j2 = mid2 - 1;
+         } else { //name > mid2->getName()
+            //on right side
+            i2 = mid2 + 1;
+         }
+      }
+   }
+
+   if (!this->files_.empty()) {
+      // binary search current directory for matching name
+      auto i = files_.begin();
+      auto j = files_.end() - 1;
+      std::vector<File>::iterator mid;
+
+      while(i <= j) {
+         mid = i + std::distance(i, j) / 2;
+
+         if (mid->getName() == name) {
+            destination.files_.push_back(std::move(*mid));
+            this->files_.erase(mid);
+            return true;
+         } else if (name < mid->getName()) {
+            //if on left side
+            j = mid - 1;
+         } else { //name > mid->getName()
+            //on right side
+            i = mid + 1;
+         }
+      }
+   }
+
+   return false;
+} // moveFileTo

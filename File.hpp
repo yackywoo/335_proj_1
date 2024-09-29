@@ -1,5 +1,6 @@
 #pragma once
-
+#include <string>
+#include <iostream>
 #include "InvalidFormatException.hpp"
 
 class File {
@@ -68,14 +69,14 @@ class File {
       * @note You'll notice we provide a default value for the first possible argument (filename)
       *       Yes, this means we can define override the default constructor and define a parameterized one simultaneously.
       */
-      File(const std::string& filename = "NewFile.txt", const std::string& content, const int* icon);
+      File(const std::string& filename = "NewFile.txt", const std::string& content = "", int* icon = nullptr);
 
       /**
       * @brief Calculates and returns the size of the File Object (IN BYTES), using .size()
       * @return size_t The number of bytes the File's contents consumes
       * @note Consider this: how does this relate to the string's length? Why is that the case?
       */
-      size_t getSize();
+      size_t getSize() const;
 
       /**
        * @brief (COPY CONSTRUCTOR) Constructs a new File object as a deep copy of the target File
@@ -99,7 +100,7 @@ class File {
        *    - All string members are themselves moved.
        *    - ALl pointers are set to nullptr
        */
-      File(const File&& moveMe);
+      File(File&& moveMe);
 
       /**
        * @brief (MOVE ASSIGNMENT) Move the rhs data to the calling file object
@@ -111,7 +112,7 @@ class File {
        *    - ALl pointers are set to nullptr
        * @note If move assignment operator is invoked upon itself, do nothing.
        */
-      File& operator=(const File&& moveMe);
+      File& operator=(File&& moveMe);
       
       /**
        * @brief (DESTRUCTOR) Routine for object deletion
