@@ -202,3 +202,53 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
 
    return false;
 } // moveFileTo
+
+bool Folder::copyFileTo(const std::string& name, Folder& destination) {
+
+   //binary search dest. folder
+   if (!destination.files_.empty()) {
+      auto i2 = destination.files_.begin();
+      auto j2 = destination.files_.end() - 1;
+      std::vector<File>::iterator mid2;
+
+      while(i2 <= j2) {
+         mid2 = i2 + std::distance(i2, j2) / 2;
+
+         if (mid2->getName() == name) {
+            return false;
+         } else if (name < mid2->getName()) {
+            //if on left side
+            j2 = mid2 - 1;
+         } else { //name > mid2->getName()
+            //on right side
+            i2 = mid2 + 1;
+         }
+      }
+   }
+   
+   //binary search curr folder
+    if (!this->files_.empty()) {
+      auto i = files_.begin();
+      auto j = files_.end() - 1;
+      std::vector<File>::iterator mid;
+
+      while(i <= j) {
+         mid = i + std::distance(i, j) / 2;
+
+         if (mid->getName() == name) {
+            //copy to dest. folder
+            destination.files_.push_back(*mid);
+            return true;
+         } else if (name < mid->getName()) {
+            //if on left side
+            j = mid - 1;
+         } else { //name > mid->getName()
+            //on right side
+            i = mid + 1;
+         }
+      }
+   }
+
+   // return false if not found current folder 
+   return false;
+} // copyFileTo

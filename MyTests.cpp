@@ -144,4 +144,11 @@ int main () {
     otherFolder.display();
     
     std::cout << "===========< COPY TESTING >===========" << std::endl;
+    std::cout << myFolder.copyFileTo("e.txt", otherFolder) << std::endl; //copy valid file to other
+    std::cout << myFolder.copyFileTo("fakefile", otherFolder) << std::endl; //copy invalid file to other
+    std::cout << myFolder.copyFileTo("Q.txt", myFolder) << std::endl; //copy to same folder, should fail
+    std::cout << otherFolder.copyFileTo("e.txt", myFolder) << std::endl; //copy existing file into other
+    
+    myFolder.display();
+    otherFolder.display();
 }
