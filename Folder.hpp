@@ -1,5 +1,4 @@
 #pragma once
-
 #include "File.hpp"
 #include "InvalidFormatException.hpp"
 #include <algorithm>

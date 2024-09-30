@@ -43,8 +43,8 @@ bool File::operator<(const File& rhs) const {
 
 // =========================== YOUR CODE HERE ===========================
 
-File::File(const std::string& filename, const std::string& content, int* icon) {
-   // if not empty, validate file name
+File::File(const std::string& filename, const std::string& contents, int* icon) : contents_(contents), icon_(icon) {
+   // if not empty filename, validate file name
    if (filename.length() > 0) {
       bool extension_exist = false;
       
@@ -60,21 +60,18 @@ File::File(const std::string& filename, const std::string& content, int* icon) {
             // if non alnum and ext exists then immediate error (prevents duplicate periods & non-alnum chars)
             throw (InvalidFormatException("Invalid character in filename: " + filename));
          }
-      } 
+      } // exits this loop then -> valid filename that may or may not have extension
       
-      // Setting data members
+      // Setting data members, adding extension if missing
       if (extension_exist == false) {
          filename_ = filename + ".txt";
       } else {
          filename_ = filename;
       }
    } else {
-      //if empty then default
+      //if empty filename then default
       filename_ = "NewFile.txt";
    }
-
-   contents_ = content;
-   icon_ = icon;
 } // Constructor
 
 size_t File::getSize() const {
@@ -82,29 +79,27 @@ size_t File::getSize() const {
    return contents_.size();
 } // getSize
 
-File::File(const File& copyMe) : filename_(copyMe.filename_), contents_(copyMe.contents_) {
-   if (copyMe.icon_ != nullptr) {
-      //deep copy icon_
-      icon_ = new int [ICON_DIM];
-      for (auto i = 0 ; i < ICON_DIM ; ++i) {
-         icon_[i] = copyMe.icon_[i];
-      }
+
+File::File(const File& rhs) : filename_(rhs.filename_), contents_(rhs.contents_) {
+   if (rhs.icon_ != nullptr) {
+      //deep copy rhs.icon_ to this->icon_ if rhs has an icon 
+      this->icon_ = new int [ICON_DIM];
+      std::copy(rhs.icon_, rhs.icon_ + ICON_DIM, this->icon_);
    } else {
-      icon_ = nullptr;
+      this->icon_ = nullptr;
    }
 } // Copy Constructor
 
-File& File::operator=(const File& copyMe) {
-   if (this != &copyMe) {
+File& File::operator=(const File& rhs) {
+   if (this != &rhs) {
       delete [] this->icon_;
 
-      this->filename_ = copyMe.filename_;
-      this->contents_ = copyMe.contents_;
-      if (copyMe.icon_ != nullptr) {
+      //deep copy rhs datamembers to this->datamembers
+      this->filename_ = rhs.filename_;
+      this->contents_ = rhs.contents_;
+      if (rhs.icon_ != nullptr) {
          this->icon_ = new int [ICON_DIM];
-         for (auto i = 0 ; i < ICON_DIM ; ++i) {
-            this->icon_[i] = copyMe.icon_[i];
-         }
+         std::copy(rhs.icon_, rhs.icon_ + ICON_DIM, this->icon_);
       } else {
          this->icon_ = nullptr;
       }
@@ -112,23 +107,23 @@ File& File::operator=(const File& copyMe) {
    return *this;
 } // Copy Assignment
 
-File::File(File&& moveMe) : filename_(std::move(moveMe.filename_)), contents_(std::move(moveMe.contents_)), icon_(moveMe.icon_) {
-   moveMe.icon_ = nullptr;
+File::File(File&& rhs) : filename_(std::move(rhs.filename_)), contents_(std::move(rhs.contents_)), icon_(rhs.icon_) {
+   rhs.icon_ = nullptr;
 } // Move Constructor
 
-File& File::operator=(File&& moveMe) {
-   if (this != &moveMe) {
+File& File::operator=(File&& rhs) {
+   if (this != &rhs) {
       delete [] this->icon_;
 
-      this->filename_ = std::move(moveMe.filename_);
-      this->contents_ = std::move(moveMe.contents_);
-      this->icon_ = moveMe.icon_;
+      this->filename_ = std::move(rhs.filename_);
+      this->contents_ = std::move(rhs.contents_);
+      this->icon_ = rhs.icon_;
 
-      moveMe.icon_ = nullptr;
+      rhs.icon_ = nullptr;
    }
 
    return *this;
-}
+} // Move Assignment
 
 File::~File() {
    delete [] icon_;

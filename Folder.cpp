@@ -73,10 +73,10 @@ void Folder::display() {
 // =========================== YOUR CODE HERE ===========================
 
 size_t Folder::getSize() const {
-   size_t result {0};
+   size_t result = 0;
 
-   for (const auto& files : files_) {
-      result += files.getSize();
+   for (auto it = files_.begin() ; it != files_.end() ; ++it) {
+      result += + it->getSize();
    }
 
    return result;
@@ -88,7 +88,7 @@ bool Folder::addFile(File& new_file) {
       return false;
    }
    
-   //if empty folder, skip the binary search
+   //if empty folder, skip the binary search & add
    if (files_.empty()) {
       files_.push_back(std::move(new_file));
       return true;
@@ -114,27 +114,27 @@ bool Folder::addFile(File& new_file) {
          //on right side
          i = mid + 1;
       }
-      //if this line of code was at bottom of loop then mid can be used to insert
-      //mid = i + std::distance(i, j) / 2;
+      //if mid variable updated at bottom of loop then mid can be used to insert
    }
 
    //if goes past while loop -> (i > j) & not duplicate, so insert
-   // cant use mid to insert because mid won't be updated after breaking out while loop
+   //   cant use mid to insert because mid won't be updated after breaking out while loop
    files_.insert(i, std::move(new_file));
 
    return true;
 } // addFile
 
 bool Folder::removeFile(const std::string& name) {
+   //binary search for file name
    auto i = files_.begin();
    auto j = files_.end() - 1;
    std::vector<File>::iterator mid;
 
-   //binary search for file name
    while (i <= j) {
       mid = i + std::distance(i, j) / 2;
 
       if (mid->getName() == name) {
+         //matching name -> file exists in directory so delete it
          files_.erase(mid);
          return true;
       } else if (name < mid->getName()) {
@@ -146,6 +146,7 @@ bool Folder::removeFile(const std::string& name) {
       }
    }
 
+   // reaches this point if no matching name found
    return false;
 } // removeFile
 
@@ -156,7 +157,7 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
    }
 
    if (!destination.files_.empty()) {
-      //binary search destination folder for same name
+      // binary search destination folder for same name
       auto i2 = destination.files_.begin();
       auto j2 = destination.files_.end() - 1;
       std::vector<File>::iterator mid2;
@@ -165,7 +166,7 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
          mid2 = i2 + std::distance(i2, j2) / 2;
 
          if (mid2->getName() == name) {
-            //return false cannot move if dupe name
+            //matching name -> cannot move if dupe name
             return false;
          } else if (name < mid2->getName()) {
             //if on left side
@@ -187,6 +188,7 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
          mid = i + std::distance(i, j) / 2;
 
          if (mid->getName() == name) {
+            // matching name -> move to dest. & erase from current directory
             destination.files_.push_back(std::move(*mid));
             this->files_.erase(mid);
             return true;
@@ -200,13 +202,13 @@ bool Folder::moveFileTo(const std::string& name, Folder& destination) {
       }
    }
 
+   // return false if not found current folder 
    return false;
 } // moveFileTo
 
 bool Folder::copyFileTo(const std::string& name, Folder& destination) {
-
-   //binary search dest. folder
    if (!destination.files_.empty()) {
+      // binary search dest. folder, make sure file with same name doesn't exist already
       auto i2 = destination.files_.begin();
       auto j2 = destination.files_.end() - 1;
       std::vector<File>::iterator mid2;
@@ -215,6 +217,7 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
          mid2 = i2 + std::distance(i2, j2) / 2;
 
          if (mid2->getName() == name) {
+            //matching name -> cannot copy to destination
             return false;
          } else if (name < mid2->getName()) {
             //if on left side
@@ -226,8 +229,8 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
       }
    }
    
-   //binary search curr folder
-    if (!this->files_.empty()) {
+   if (!this->files_.empty()) {
+      // binary search curr folder, make sure file with given name exists in curr. directory
       auto i = files_.begin();
       auto j = files_.end() - 1;
       std::vector<File>::iterator mid;
@@ -236,7 +239,7 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
          mid = i + std::distance(i, j) / 2;
 
          if (mid->getName() == name) {
-            //copy to dest. folder
+            //matching name -> copy to destination
             destination.files_.push_back(*mid);
             return true;
          } else if (name < mid->getName()) {

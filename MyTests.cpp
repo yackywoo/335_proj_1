@@ -5,7 +5,6 @@
 #include <cassert>
 #include <vector>
 
-
 int main () {
     std::cout << "========< EMPTY CONSTRUCTOR TEST >========" << std::endl;
     //default constructor test

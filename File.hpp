@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include "InvalidFormatException.hpp"
 
 class File {
@@ -69,7 +70,7 @@ class File {
       * @note You'll notice we provide a default value for the first possible argument (filename)
       *       Yes, this means we can define override the default constructor and define a parameterized one simultaneously.
       */
-      File(const std::string& filename = "NewFile.txt", const std::string& content = "", int* icon = nullptr);
+      File(const std::string& filename = "NewFile.txt", const std::string& contents = "", int* icon = nullptr);
 
       /**
       * @brief Calculates and returns the size of the File Object (IN BYTES), using .size()
@@ -82,7 +83,7 @@ class File {
        * @brief (COPY CONSTRUCTOR) Constructs a new File object as a deep copy of the target File
        * @param rhs A const reference to the file to be copied from
        */
-      File(const File& copyMe);
+      File(const File& rhs);
 
       /**
        * @brief (COPY ASSIGNMENT) Replaces the calling File's data members using a deep copy of the rhs File.
@@ -91,7 +92,7 @@ class File {
        * @return A reference to the new File copy
        * @note If copy assignment operator is invoked upon itself, do nothing.
        */
-      File& operator=(const File& copyMe);
+      File& operator=(const File& rhs);
 
       /**
        * @brief (MOVE CONSTRUCTOR) Construct a new File object by moving the data from the righthand side File Object
@@ -100,7 +101,7 @@ class File {
        *    - All string members are themselves moved.
        *    - ALl pointers are set to nullptr
        */
-      File(File&& moveMe);
+      File(File&& rhs);
 
       /**
        * @brief (MOVE ASSIGNMENT) Move the rhs data to the calling file object
@@ -112,7 +113,7 @@ class File {
        *    - ALl pointers are set to nullptr
        * @note If move assignment operator is invoked upon itself, do nothing.
        */
-      File& operator=(File&& moveMe);
+      File& operator=(File&& rhs);
       
       /**
        * @brief (DESTRUCTOR) Routine for object deletion
