@@ -76,7 +76,7 @@ size_t Folder::getSize() const {
    size_t result = 0;
 
    for (auto it = files_.begin() ; it != files_.end() ; ++it) {
-      result += + it->getSize();
+      result += it->getSize();
    }
 
    return result;
@@ -239,8 +239,9 @@ bool Folder::copyFileTo(const std::string& name, Folder& destination) {
          mid = i + std::distance(i, j) / 2;
 
          if (mid->getName() == name) {
-            //matching name -> copy to destination
-            destination.files_.push_back(*mid);
+            //matching name -> create copy with copy constructor and push_back
+            File file_to_add(*mid); 
+            destination.files_.push_back(file_to_add);
             return true;
          } else if (name < mid->getName()) {
             //if on left side
