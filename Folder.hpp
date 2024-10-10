@@ -104,5 +104,5 @@ class Folder {
          * @param destination The destination folder, as a reference to a Folder object
          * @return True if the file was copied successfully. False otherwise.
          */
-      bool copyFileTo(const std::string& name, Folder& destination);
+      bool copyFileTo(const std::string& name, Folder& destination) const;
 };
